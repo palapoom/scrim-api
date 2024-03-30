@@ -7,5 +7,6 @@ import (
 )
 
 func HandlerPing(c *gin.Context) {
-	c.Status(http.StatusOK)
+	// c.Status(http.StatusOK)
+	c.JSON(http.StatusOK, "pong")
 }
