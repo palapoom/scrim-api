@@ -51,9 +51,9 @@ func main() {
 	r.POST("/team/user-id/:user-id/create", func(ctx *gin.Context) { handler.HandlerTeamCreate(ctx, ctx.Param("user-id")) })
 	r.PUT("/team", handler.HandlerTeamUpdate)
 	r.PUT("/team/join", handler.HandlerTeamJoin)
-	r.GET("team/:team-id/member", func(ctx *gin.Context) { handler.HandlerTeamMemberGet(ctx, ctx.Param("team-id")) })
-	r.GET("team/:team-id/detail", func(ctx *gin.Context) { handler.HandlerTeamDetailGet(ctx, ctx.Param("team-id")) })
-	r.PUT("team/:team-id/invite-code", func(ctx *gin.Context) { handler.HandlerTeamInviteCodeGet(ctx, ctx.Param("team-id")) })
+	r.GET("team/member/team-id/:team-id", func(ctx *gin.Context) { handler.HandlerTeamMemberGet(ctx, ctx.Param("team-id")) })
+	r.GET("team/detail/team-id/:team-id", func(ctx *gin.Context) { handler.HandlerTeamDetailGet(ctx, ctx.Param("team-id")) })
+	r.PUT("team/invite-code/team-id/:team-id", func(ctx *gin.Context) { handler.HandlerTeamInviteCodeGet(ctx, ctx.Param("team-id")) })
 
 	r.POST("/scrim", handler.HandlerScrimPost)
 	r.POST("/scrim/offer", handler.HandlerScrimMakeOffer)
