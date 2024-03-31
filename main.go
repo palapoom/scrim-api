@@ -48,18 +48,24 @@ func main() {
 	r.POST("/change-role", handler.HandlerChangeRole)
 	r.POST("/kick-member", handler.HandlerKickMember)
 
-	r.POST("/team/user-id/:user-id/create", func(ctx *gin.Context) { handler.HandlerTeamCreate(ctx, ctx.Param("user-id")) })
-	r.PUT("/team", handler.HandlerTeamUpdate)
-	r.PUT("/team/join", handler.HandlerTeamJoin)
-	r.GET("/team/member/team-id/:team-id", func(ctx *gin.Context) { handler.HandlerTeamMemberGet(ctx, ctx.Param("team-id")) })
-	r.GET("/team/detail/team-id/:team-id", func(ctx *gin.Context) { handler.HandlerTeamDetailGet(ctx, ctx.Param("team-id")) })
-	r.PUT("/team/invite-code/team-id/:team-id", func(ctx *gin.Context) { handler.HandlerTeamInviteCodeGet(ctx, ctx.Param("team-id")) })
+	team := r.Group("/team")
+	{
+		team.POST("/create/user-id/:user-id/", func(ctx *gin.Context) { handler.HandlerTeamCreate(ctx, ctx.Param("user-id")) })
+		team.PUT("/join", handler.HandlerTeamJoin)
+		team.GET("/member/team-id/:team-id", func(ctx *gin.Context) { handler.HandlerTeamMemberGet(ctx, ctx.Param("team-id")) })
+		team.GET("/detail/team-id/:team-id", func(ctx *gin.Context) { handler.HandlerTeamDetailGet(ctx, ctx.Param("team-id")) })
+		team.PUT("/invite-code/team-id/:team-id", func(ctx *gin.Context) { handler.HandlerTeamInviteCodeGet(ctx, ctx.Param("team-id")) })
+		team.PUT("/", handler.HandlerTeamUpdate)
+	}
 
-	r.POST("/scrim", handler.HandlerScrimPost)
-	r.POST("/scrim/offer", handler.HandlerScrimMakeOffer)
-	r.PUT("/scrim/offer/accept", handler.HandlerScrimAcceptOffer)
-	r.DELETE("/scrim/cancel", handler.HandlerScrimCancelMatch)
-	r.DELETE("/scrim", handler.HandlerScrimDelete)
+	scrim := r.Group("/scrim")
+	{
+		scrim.POST("/offer", handler.HandlerScrimMakeOffer)
+		scrim.PUT("/accept", handler.HandlerScrimAcceptOffer)
+		scrim.DELETE("/cancel", handler.HandlerScrimCancelMatch)
+		scrim.POST("/", handler.HandlerScrimPost)
+		scrim.DELETE("/", handler.HandlerScrimDelete)
+	}
 
 	r.Run()
 }
