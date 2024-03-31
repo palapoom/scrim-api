@@ -30,7 +30,7 @@ type Member struct {
 type TeamDetail struct {
 	TeamName   string   `json:"team_name"`
 	GameId     int      `json:"game_id"`
-	TeamLogo   string   `json:"team_logo"`
+	TeamLogo   *string  `json:"team_logo"`
 	InviteCode string   `json:"invite_code"`
 	InviteFlag bool     `json:"invite_flag"`
 	Members    []Member `json:"members"`
