@@ -42,10 +42,8 @@ func main() {
 	database.SetDB(db)
 
 	r := gin.Default()
+	r.Use(cors.Default())
 	r.Use(gin.Recovery())
-	config := cors.DefaultConfig()
-	config.AllowAllOrigins = true
-	r.Use(cors.New(config))
 
 	r.GET("/ping", handler.HandlerPing)
 	r.POST("/register", handler.HandlerRegister)
