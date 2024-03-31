@@ -6,6 +6,8 @@ import (
 	"scrim-api/database"
 	"scrim-api/handler"
 
+	"github.com/gin-contrib/cors"
+
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 )
@@ -41,6 +43,9 @@ func main() {
 
 	r := gin.Default()
 	r.Use(gin.Recovery())
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	r.Use(cors.New(config))
 
 	r.GET("/ping", handler.HandlerPing)
 	r.POST("/register", handler.HandlerRegister)
