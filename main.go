@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"scrim-api/database"
 	"scrim-api/handler"
 
 	"github.com/gin-gonic/gin"
@@ -24,6 +25,7 @@ func checkError(err error) {
 }
 
 func main() {
+
 	// Initialize connection string.
 	var connectionString string = fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=require", HOST, USER, PASSWORD, DATABASE)
 
@@ -35,27 +37,32 @@ func main() {
 	checkError(err)
 	fmt.Println("Successfully created connection to database")
 
-	// Drop previous table of same name if one exists.
-	_, err = db.Exec("DROP TABLE IF EXISTS inventory;")
-	checkError(err)
-	fmt.Println("Finished dropping table (if existed)")
+	database.SetDB(db)
 
-	// Create table.
-	_, err = db.Exec("CREATE TABLE inventory (id serial PRIMARY KEY, name VARCHAR(50), quantity INTEGER);")
-	checkError(err)
-	fmt.Println("Finished creating table")
+	r := gin.Default()
+	r.Use(gin.Recovery())
 
-	// Insert some data into table.
-	sql_statement := "INSERT INTO inventory (name, quantity) VALUES ($1, $2);"
-	_, err = db.Exec(sql_statement, "banana", 150)
-	checkError(err)
-	_, err = db.Exec(sql_statement, "orange", 154)
-	checkError(err)
-	_, err = db.Exec(sql_statement, "apple", 100)
-	checkError(err)
-	fmt.Println("Inserted 3 rows of data")
-
-	r := gin.New()
 	r.GET("/ping", handler.HandlerPing)
+	r.POST("/register", handler.HandlerRegister)
+	r.POST("/login", handler.HandlerLogin)
+	r.POST("change-role", handler.HandlerChangeRole)
+	r.POST("kick-member", handler.HandlerKickMember)
+
+	r.POST("/team/user-id/:user-id/create", func(ctx *gin.Context) { handler.HandlerTeamCreate(ctx, ctx.Param("user-id")) })
+	r.PUT("/team", handler.HandlerTeamUpdate)
+	r.PUT("/team/join", handler.HandlerTeamJoin)
+	r.GET("team/:team-id/member", func(ctx *gin.Context) { handler.HandlerTeamMemberGet(ctx, ctx.Param("team-id")) })
+	r.GET("team/:team-id/detail", func(ctx *gin.Context) { handler.HandlerTeamDetailGet(ctx, ctx.Param("team-id")) })
+	r.PUT("team/:team-id/invite-code", func(ctx *gin.Context) { handler.HandlerTeamInviteCodeGet(ctx, ctx.Param("team-id")) })
+
+	r.POST("/scrim", handler.HandlerScrimPost)
+	r.POST("/scrim/offer", handler.HandlerScrimMakeOffer)
+	r.PUT("/scrim/offer/accept", handler.HandlerScrimAcceptOffer)
+	r.DELETE("/scrim/cancel", handler.HandlerScrimCancelMatch)
+	r.DELETE("/scrim", handler.HandlerScrimDelete)
+
 	r.Run()
 }
+
+// env := os.Getenv("HOMEPATH")
+// 	log.Println(env)
