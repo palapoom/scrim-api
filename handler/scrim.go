@@ -13,7 +13,7 @@ func HandlerScrimPost(c *gin.Context) {
 	var data model.ScrimPost
 
 	if err := c.ShouldBindJSON(&data); err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.Status(http.StatusBadRequest)
 		return
 	}
@@ -21,7 +21,7 @@ func HandlerScrimPost(c *gin.Context) {
 	resp, err := service.ScrimPost(data)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
@@ -35,7 +35,7 @@ func HandlerScrimMakeOffer(c *gin.Context) {
 	var data model.ScrimMakeOffer
 
 	if err := c.ShouldBindJSON(&data); err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.Status(http.StatusBadRequest)
 		return
 	}
@@ -43,7 +43,7 @@ func HandlerScrimMakeOffer(c *gin.Context) {
 	err := service.ScrimMakeOffer(data)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
@@ -57,7 +57,7 @@ func HandlerScrimAcceptOffer(c *gin.Context) {
 	var data model.ScrimAcceptOffer
 
 	if err := c.ShouldBindJSON(&data); err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.Status(http.StatusBadRequest)
 		return
 	}
@@ -65,7 +65,7 @@ func HandlerScrimAcceptOffer(c *gin.Context) {
 	err := service.ScrimAcceptOffer(data)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
@@ -79,7 +79,7 @@ func HandlerScrimCancelMatch(c *gin.Context) {
 	var data model.ScrimCancelMatch
 
 	if err := c.ShouldBindJSON(&data); err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.Status(http.StatusBadRequest)
 		return
 	}
@@ -87,7 +87,7 @@ func HandlerScrimCancelMatch(c *gin.Context) {
 	err := service.ScrimCancelMatch(data)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
@@ -101,7 +101,7 @@ func HandlerScrimDelete(c *gin.Context) {
 	var data model.ScrimDelete
 
 	if err := c.ShouldBindJSON(&data); err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.Status(http.StatusBadRequest)
 		return
 	}
@@ -109,7 +109,7 @@ func HandlerScrimDelete(c *gin.Context) {
 	err := service.ScrimDelete(data)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})

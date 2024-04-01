@@ -13,7 +13,7 @@ func HandlerTeamCreate(c *gin.Context, userId string) {
 	var data model.TeamCreateReq
 
 	if err := c.ShouldBindJSON(&data); err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.Status(http.StatusBadRequest)
 		return
 	}
@@ -21,7 +21,7 @@ func HandlerTeamCreate(c *gin.Context, userId string) {
 	teamId, err := service.TeamCreate(userId, data)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
@@ -37,7 +37,7 @@ func HandlerTeamUpdate(c *gin.Context) {
 	var data model.TeamUpdate
 
 	if err := c.ShouldBindJSON(&data); err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.Status(http.StatusBadRequest)
 		return
 	}
@@ -45,7 +45,7 @@ func HandlerTeamUpdate(c *gin.Context) {
 	err := service.TeamUpdate(data)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
@@ -59,7 +59,7 @@ func HandlerTeamJoin(c *gin.Context) {
 	var data model.TeamJoin
 
 	if err := c.ShouldBindJSON(&data); err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.Status(http.StatusBadRequest)
 		return
 	}
@@ -67,7 +67,7 @@ func HandlerTeamJoin(c *gin.Context) {
 	err := service.TeamJoin(data)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
@@ -81,7 +81,7 @@ func HandlerTeamMemberGet(c *gin.Context, teamId string) {
 	resp, err := service.TeamMemberGet(teamId)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
@@ -95,7 +95,7 @@ func HandlerTeamDetailGet(c *gin.Context, teamId string) {
 	resp, err := service.TeamDetailGet(teamId)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
@@ -109,7 +109,7 @@ func HandlerTeamInviteCodeGet(c *gin.Context, teamId string) {
 	resp, err := service.TeamSetFlagInviteCode(teamId)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})

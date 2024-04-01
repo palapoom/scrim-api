@@ -13,7 +13,7 @@ func HandlerRegister(c *gin.Context) {
 	var userRegInfo model.UserRegisterReq
 
 	if err := c.ShouldBindJSON(&userRegInfo); err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.Status(http.StatusBadRequest)
 		return
 	}
@@ -21,7 +21,7 @@ func HandlerRegister(c *gin.Context) {
 	err := service.UserRegister(userRegInfo)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.Status(http.StatusBadRequest)
 		return
 	}
@@ -33,7 +33,7 @@ func HandlerLogin(c *gin.Context) {
 	var userLoginData model.UserLoginReq
 
 	if err := c.ShouldBindJSON(&userLoginData); err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.Status(http.StatusBadRequest)
 		return
 	}
@@ -41,7 +41,7 @@ func HandlerLogin(c *gin.Context) {
 	resp, err := service.UserLogin(userLoginData)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error_code": "0001",
 			"error_msg":  "not found user, maybe email and password are incorrect.  ",
@@ -56,7 +56,7 @@ func HandlerChangeRole(c *gin.Context) {
 	var data model.ChangeRole
 
 	if err := c.ShouldBindJSON(&data); err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.Status(http.StatusBadRequest)
 		return
 	}
@@ -64,7 +64,7 @@ func HandlerChangeRole(c *gin.Context) {
 	err := service.ChangeRole(data)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error_code": "0001",
 			"error_msg":  "error changing role.",
@@ -79,7 +79,7 @@ func HandlerKickMember(c *gin.Context) {
 	var data model.KickMember
 
 	if err := c.ShouldBindJSON(&data); err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.Status(http.StatusBadRequest)
 		return
 	}
@@ -87,7 +87,7 @@ func HandlerKickMember(c *gin.Context) {
 	err := service.KickMember(data)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error_code": "0001",
 			"error_msg":  "error kicking member.",
