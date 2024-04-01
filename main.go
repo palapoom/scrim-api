@@ -71,7 +71,7 @@ func main() {
 		team.GET("/member/team-id/:team-id", func(ctx *gin.Context) { handler.HandlerTeamMemberGet(ctx, ctx.Param("team-id")) })
 		team.GET("/detail/team-id/:team-id", func(ctx *gin.Context) { handler.HandlerTeamDetailGet(ctx, ctx.Param("team-id")) })
 		team.PUT("/invite-code/team-id/:team-id", func(ctx *gin.Context) { handler.HandlerTeamInviteCodeGet(ctx, ctx.Param("team-id")) })
-		team.PUT("/", handler.HandlerTeamUpdate)
+		team.PUT("", handler.HandlerTeamUpdate)
 	}
 
 	scrim := r.Group("/scrim")
@@ -79,8 +79,8 @@ func main() {
 		scrim.POST("/offer", handler.HandlerScrimMakeOffer)
 		scrim.PUT("/accept", handler.HandlerScrimAcceptOffer)
 		scrim.DELETE("/cancel", handler.HandlerScrimCancelMatch)
-		scrim.POST("/", handler.HandlerScrimPost)
-		scrim.DELETE("/", handler.HandlerScrimDelete)
+		scrim.POST("", handler.HandlerScrimPost)
+		scrim.DELETE("", handler.HandlerScrimDelete)
 	}
 
 	// use ginSwagger middleware to serve the API docs
