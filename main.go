@@ -7,6 +7,10 @@ import (
 	"scrim-api/handler"
 
 	"github.com/gin-contrib/cors"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	"scrim-api/docs"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
@@ -41,8 +45,16 @@ func main() {
 
 	database.SetDB(db)
 
+	docs.SwaggerInfo.Title = "Scrim API"
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+
 	r := gin.Default()
-	r.Use(cors.Default())
+
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	config.AllowCredentials = true
+	r.Use(cors.New(config))
 	r.Use(gin.Recovery())
 
 	r.GET("/ping", handler.HandlerPing)
@@ -69,6 +81,9 @@ func main() {
 		scrim.POST("/", handler.HandlerScrimPost)
 		scrim.DELETE("/", handler.HandlerScrimDelete)
 	}
+
+	// use ginSwagger middleware to serve the API docs
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	r.Run()
 }

@@ -9,6 +9,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @summary HandlerScrimPost
+// @Param request body  true model.ScrimPost "request body"
+// @Success 201 {int}
+// @Tags         team
+// @response 201 {int}
+// @router /team [post]
 func HandlerScrimPost(c *gin.Context) {
 	var data model.ScrimPost
 

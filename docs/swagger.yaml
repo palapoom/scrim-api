@@ -1,0 +1,16 @@
+info:
+  contact: {}
+paths:
+  /ping:
+    get:
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: pong
+          schema:
+            type: string
+      summary: ping
+      tags:
+      - ping
+swagger: "2.0"
