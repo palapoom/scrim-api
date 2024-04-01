@@ -52,6 +52,7 @@ func main() {
 	r := gin.Default()
 
 	config := cors.DefaultConfig()
+	config.AllowHeaders = []string{"Content-Type"}
 	config.AllowAllOrigins = true
 	config.AllowCredentials = true
 	r.Use(cors.New(config))
