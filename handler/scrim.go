@@ -124,3 +124,41 @@ func HandlerScrimDelete(c *gin.Context) {
 
 	c.Status(http.StatusNoContent)
 }
+
+func HandlerScrimGetOffer(c *gin.Context, teamId string) {
+	resp, err := service.ScrimGetOffer(teamId)
+
+	if err != nil {
+		log.Print(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
+}
+
+func HandlerScrimQuery(c *gin.Context) {
+	var data model.ScrimGetReq
+
+	if err := c.ShouldBindJSON(&data); err != nil {
+		log.Print(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	resp, err := service.ScrimGet(data)
+
+	if err != nil {
+		log.Print(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
+}

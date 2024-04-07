@@ -29,17 +29,20 @@ type ScrimDelete struct {
 
 type ScrimGetReq struct {
 	ScrimMap *string `json:"scrim_map"`
+	TeamId   int     `json:"team_id" binding:"required"`
 }
 
-type ScrimGetAll struct {
+type ScrimGet struct {
 	Scrims []ScrimDetail `json:"scrims"`
 }
 
 type ScrimDetail struct {
-	ScrimId   int    `json:"scrim_id"`
-	TeamLogo  string `json:"team_logo"`
-	TeamName  string `json:"team_name"`
-	ScrimMap  string `json:"scrim_map"`
-	ScrimDate string `json:"scrim_date"`
-	ScrimTime string `json:"scrim_time"`
+	ScrimId     int     `json:"scrim_id"`
+	TeamId      int     `json:"team_id"`
+	TeamLogo    *string `json:"team_logo"`
+	TeamName    string  `json:"team_name"`
+	ScrimMap    string  `json:"scrim_map"`
+	ScrimDate   string  `json:"scrim_date"`
+	ScrimTime   string  `json:"scrim_time"`
+	ScrimStatus string  `json:"scrim_status"`
 }

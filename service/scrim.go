@@ -1,6 +1,7 @@
 package service
 
 import (
+	"database/sql"
 	"fmt"
 	"scrim-api/database"
 	"scrim-api/model"
@@ -79,4 +80,64 @@ func ScrimDelete(data model.ScrimDelete) error {
 	}
 
 	return nil
+}
+
+func ScrimGetOffer(teamId string) (*model.ScrimGet, error) {
+	var scrims model.ScrimGet
+	var rows *sql.Rows
+	var err error
+
+	rows, err = database.Db.Query("SELECT scrim.scrim_id, scrim_offer.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time FROM scrim INNER JOIN scrim_offer ON scrim.scrim_id = scrim_offer.scrim_id INNER JOIN team ON scrim.team_id = team.team_id WHERE scrim.team_id = $1;", teamId)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+	for rows.Next() {
+		var detail model.ScrimDetail
+		err := rows.Scan(&detail.ScrimId, &detail.TeamId, &detail.TeamLogo, &detail.TeamName, &detail.ScrimMap, &detail.ScrimDate, &detail.ScrimTime)
+		if err != nil {
+			return nil, err
+		}
+		scrims.Scrims = append(scrims.Scrims, detail)
+	}
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+
+	return &scrims, nil
+}
+
+func ScrimGet(data model.ScrimGetReq) (*model.ScrimGet, error) {
+	var scrims model.ScrimGet
+	var rows *sql.Rows
+	var err error
+	if data.ScrimMap != nil {
+		rows, err = database.Db.Query("SELECT scrim.scrim_id, scrim.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time, scrim_status FROM scrim INNER JOIN team ON scrim.team_id = team.team_id WHERE scrim.team_id != $1 and scrim.scrim_status = $2 and scrim.scrim_map = $3;", data.TeamId, "unmatched", data.ScrimMap)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		rows, err = database.Db.Query("SELECT scrim.scrim_id, scrim.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time, scrim_status FROM scrim INNER JOIN team ON scrim.team_id = team.team_id WHERE scrim.team_id != $1 and scrim.scrim_status = $2;", data.TeamId, "unmatched")
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	defer rows.Close()
+	for rows.Next() {
+		var detail model.ScrimDetail
+		err := rows.Scan(&detail.ScrimId, &detail.TeamId, &detail.TeamLogo, &detail.TeamName, &detail.ScrimMap, &detail.ScrimDate, &detail.ScrimTime, &detail.ScrimStatus)
+		if err != nil {
+			return nil, err
+		}
+		scrims.Scrims = append(scrims.Scrims, detail)
+	}
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+
+	return &scrims, nil
 }

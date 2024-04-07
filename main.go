@@ -81,6 +81,8 @@ func main() {
 		scrim.DELETE("/cancel", handler.HandlerScrimCancelMatch)
 		scrim.POST("", handler.HandlerScrimPost)
 		scrim.DELETE("", handler.HandlerScrimDelete)
+		scrim.GET("/offer/team-id/:team-id", func(ctx *gin.Context) { handler.HandlerScrimGetOffer(ctx, ctx.Param("team-id")) })
+		scrim.GET("", handler.HandlerScrimQuery)
 	}
 
 	// use ginSwagger middleware to serve the API docs
