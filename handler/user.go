@@ -97,5 +97,9 @@ func HandlerKickMember(c *gin.Context) {
 		return
 	}
 
-	c.Status(http.StatusOK)
+	// c.Status(http.StatusOK)
+	c.JSON(http.StatusOK, gin.H{
+		"error_code": "0000",
+		"error_msg":  "successfully kick.",
+	})
 }
