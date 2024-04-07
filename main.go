@@ -66,7 +66,7 @@ func main() {
 
 	team := r.Group("/team")
 	{
-		team.POST("/create/user-id/:user-id/", func(ctx *gin.Context) { handler.HandlerTeamCreate(ctx, ctx.Param("user-id")) })
+		team.POST("/create/user-id/:user-id", func(ctx *gin.Context) { handler.HandlerTeamCreate(ctx, ctx.Param("user-id")) })
 		team.PUT("/join", handler.HandlerTeamJoin)
 		team.GET("/member/team-id/:team-id", func(ctx *gin.Context) { handler.HandlerTeamMemberGet(ctx, ctx.Param("team-id")) })
 		team.GET("/detail/team-id/:team-id", func(ctx *gin.Context) { handler.HandlerTeamDetailGet(ctx, ctx.Param("team-id")) })
