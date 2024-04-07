@@ -6,6 +6,12 @@ type TeamCreateReq struct {
 	GameId   int     `json:"game_id" binding:"required"`
 }
 
+type TeamCreateResp struct {
+	TeamId   int     `json:"team_id"`
+	TeamName string  `json:"team_name"`
+	TeamLogo *string `json:"team_logo"`
+}
+
 type TeamUpdate struct {
 	TeamId   int     `json:"team_id" binding:"required"`
 	TeamName string  `json:"team_name" binding:"required"`

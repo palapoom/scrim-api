@@ -6,7 +6,7 @@ import (
 	"scrim-api/model"
 )
 
-func TeamCreate(userId string, data model.TeamCreateReq) (*int, error) {
+func TeamCreate(userId string, data model.TeamCreateReq) (*model.TeamCreateResp, error) {
 	var lastTeamId int
 	err := database.Db.QueryRow("SELECT team_id FROM \"team\" ORDER BY team_id DESC LIMIT 1").Scan(&lastTeamId)
 	if err != nil {
@@ -47,7 +47,11 @@ func TeamCreate(userId string, data model.TeamCreateReq) (*int, error) {
 		return nil, err
 	}
 
-	return &lastTeamId, nil
+	return &model.TeamCreateResp{
+		TeamId:   lastTeamId,
+		TeamName: data.TeamName,
+		TeamLogo: data.TeamLogo,
+	}, nil
 }
 
 func TeamUpdate(data model.TeamUpdate) error {

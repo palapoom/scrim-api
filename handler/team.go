@@ -28,9 +28,7 @@ func HandlerTeamCreate(c *gin.Context, userId string) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"team_id": teamId,
-	})
+	c.JSON(http.StatusOK, teamId)
 }
 
 func HandlerTeamUpdate(c *gin.Context) {
