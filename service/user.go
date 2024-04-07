@@ -32,7 +32,8 @@ func UserLogin(data model.UserLoginReq) (*model.UserData, error) {
         u.game_id, 
         g.game_name,
         u.team_id,
-        t.team_name
+        t.team_name,
+		t.team_logo
     FROM 
         "user" u
     JOIN 
@@ -51,7 +52,9 @@ func UserLogin(data model.UserLoginReq) (*model.UserData, error) {
 		&userData.GameId,
 		&userData.GameName,
 		&userData.TeamId,
-		&userData.TeamName)
+		&userData.TeamName,
+		&userData.TeamLogo,
+	)
 	if err != nil {
 		return nil, err
 	}

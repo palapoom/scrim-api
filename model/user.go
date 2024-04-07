@@ -23,6 +23,7 @@ type UserData struct {
 	GameName    string  `json:"game_name"`
 	TeamId      *int    `json:"team_id"`
 	TeamName    *string `json:"team_name"`
+	TeamLogo    *string `json:"team_logo"`
 }
 
 type ChangeRole struct { // by Manager
