@@ -70,7 +70,7 @@ func ChangeRole(data model.ChangeRole) error {
 }
 
 func KickMember(data model.KickMember) error {
-	_, err := database.Db.Exec("UPDATE \"user\" SET role = $1, team = $3 WHERE user_id = $2;",
+	_, err := database.Db.Exec("UPDATE \"user\" SET role = $1, team_id = $3 WHERE user_id = $2;",
 		"Player", data.UserId, nil)
 	if err != nil {
 		return err

@@ -80,7 +80,9 @@ func HandlerKickMember(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&data); err != nil {
 		log.Print(err)
-		c.Status(http.StatusBadRequest)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error_msg": err.Error(),
+		})
 		return
 	}
 
