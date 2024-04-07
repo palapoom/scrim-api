@@ -85,6 +85,11 @@ func main() {
 		scrim.GET("", handler.HandlerScrimQuery)
 	}
 
+	game := r.Group("/game")
+	{
+		game.GET("/game-id/:game-id/map", func(ctx *gin.Context) { handler.HandlerMapNameGet(ctx, ctx.Param("game-id")) })
+	}
+
 	// use ginSwagger middleware to serve the API docs
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
