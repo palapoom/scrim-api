@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"scrim-api/database"
 	"scrim-api/model"
+	"strconv"
 )
 
 func TeamCreate(userId string, data model.TeamCreateReq) (*model.TeamCreateResp, error) {
@@ -77,21 +78,26 @@ func TeamUpdate(data model.TeamUpdate) error {
 	return nil
 }
 
-func TeamJoin(data model.TeamJoin) error {
+func TeamJoin(data model.TeamJoin) (*model.TeamDetail, error) {
 	var teamID int
 	err := database.Db.QueryRow("SELECT team_id FROM team WHERE invite_code = $1", data.InviteCode).Scan(&teamID)
 	if err != nil {
 		fmt.Println("Error querying team table:", err)
-		return err
+		return nil, err
 	}
 
 	_, err = database.Db.Exec("UPDATE \"user\" SET team_id = $1 WHERE user_id = $2", teamID, data.UserId)
 	fmt.Println("Error updating user table:", err)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	teamDetail, err := TeamDetailGet(strconv.Itoa(teamID))
+	if err != nil {
+		return nil, err
+	}
+
+	return teamDetail, nil
 }
 
 func TeamMemberGet(teamId string) (*model.TeamMember, error) {

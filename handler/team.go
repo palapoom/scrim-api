@@ -62,8 +62,7 @@ func HandlerTeamJoin(c *gin.Context) {
 		return
 	}
 
-	err := service.TeamJoin(data)
-
+	resp, err := service.TeamJoin(data)
 	if err != nil {
 		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -72,7 +71,7 @@ func HandlerTeamJoin(c *gin.Context) {
 		return
 	}
 
-	c.Status(http.StatusOK)
+	c.JSON(http.StatusOK, resp)
 }
 
 func HandlerTeamMemberGet(c *gin.Context, teamId string) {
