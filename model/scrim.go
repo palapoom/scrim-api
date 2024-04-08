@@ -46,3 +46,28 @@ type ScrimDetail struct {
 	ScrimTime   string  `json:"scrim_time"`
 	ScrimStatus string  `json:"scrim_status"`
 }
+
+type ScrimQueryResp struct {
+	Scrims []ScrimDetailForQuery `json:"scrims"`
+}
+
+type ScrimDetailForQuery struct {
+	ScrimId     int     `json:"scrim_id"`
+	TeamId      int     `json:"team_id"`
+	TeamLogo    *string `json:"team_logo"`
+	TeamName    string  `json:"team_name"`
+	ScrimMap    string  `json:"scrim_map"`
+	ScrimDate   string  `json:"scrim_date"`
+	ScrimTime   string  `json:"scrim_time"`
+	ScrimStatus string  `json:"scrim_status"`
+	Flag        string  `json:"flag"` // 1. delete 2. make offer 3. withdraw offer
+}
+
+type ScrimOffer struct {
+	ScrimOffers []ScrimOfferDetail
+}
+
+type ScrimOfferDetail struct {
+	ScrimId     int
+	OfferStatus string
+}
