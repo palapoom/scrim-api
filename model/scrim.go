@@ -28,8 +28,8 @@ type ScrimDelete struct {
 }
 
 type ScrimGetReq struct {
-	ScrimMap *string `json:"scrim_map"`
-	TeamId   int     `json:"team_id" binding:"required"`
+	ScrimMap *string `form:"scrim_map" json:"scrim_map"`
+	TeamId   int     `form:"team_id" json:"team_id" binding:"required"`
 }
 
 type ScrimGet struct {

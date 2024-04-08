@@ -154,7 +154,7 @@ func HandlerScrimGetOffer(c *gin.Context, teamId string) {
 func HandlerScrimQuery(c *gin.Context) {
 	var data model.ScrimGetReq
 
-	if err := c.ShouldBindJSON(&data); err != nil {
+	if err := c.BindQuery(&data); err != nil {
 		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
