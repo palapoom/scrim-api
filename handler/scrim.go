@@ -174,3 +174,17 @@ func HandlerScrimQuery(c *gin.Context) {
 
 	c.JSON(http.StatusOK, resp)
 }
+
+func HandlerScrimGetMatch(c *gin.Context, teamId string) {
+	resp, err := service.ScrimGetMatch(teamId)
+
+	if err != nil {
+		log.Print(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
+}

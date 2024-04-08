@@ -141,3 +141,29 @@ func ScrimGet(data model.ScrimGetReq) (*model.ScrimGet, error) {
 
 	return &scrims, nil
 }
+
+func ScrimGetMatch(teamId string) (*model.ScrimGet, error) {
+	var scrims model.ScrimGet
+
+	rows, err := database.Db.Query("SELECT scrim.scrim_id, scrim.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time, scrim_status FROM scrim INNER JOIN team ON scrim.team_id = team.team_id WHERE (scrim.team_id = $1 or scrim.offer_team_id = $2) and scrim.scrim_status = 'matched';", teamId, teamId)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+	for rows.Next() {
+		var detail model.ScrimDetail
+		err := rows.Scan(&detail.ScrimId, &detail.TeamId, &detail.TeamLogo, &detail.TeamName, &detail.ScrimMap, &detail.ScrimDate, &detail.ScrimTime, &detail.ScrimStatus)
+		if err != nil {
+			return nil, err
+		}
+		scrims.Scrims = append(scrims.Scrims, detail)
+	}
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+
+	return &scrims, nil
+
+}
