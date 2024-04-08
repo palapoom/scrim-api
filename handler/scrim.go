@@ -56,7 +56,10 @@ func HandlerScrimMakeOffer(c *gin.Context) {
 		return
 	}
 
-	c.Status(http.StatusOK)
+	c.JSON(http.StatusOK, gin.H{
+		"error_code": "0000",
+		"error_msg":  "successfully make offer",
+	})
 }
 
 func HandlerScrimAcceptOffer(c *gin.Context) {
@@ -103,7 +106,10 @@ func HandlerScrimCancelMatch(c *gin.Context) {
 		return
 	}
 
-	c.Status(http.StatusOK)
+	c.JSON(http.StatusOK, gin.H{
+		"error_code": "0000",
+		"error_msg":  "successfully cancel",
+	})
 }
 
 func HandlerScrimDelete(c *gin.Context) {
@@ -125,7 +131,10 @@ func HandlerScrimDelete(c *gin.Context) {
 		return
 	}
 
-	c.Status(http.StatusNoContent)
+	c.JSON(http.StatusNoContent, gin.H{
+		"error_code": "0000",
+		"error_msg":  "successfully delete scrim",
+	})
 }
 
 func HandlerScrimGetOffer(c *gin.Context, teamId string) {
