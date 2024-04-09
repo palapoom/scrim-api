@@ -114,12 +114,12 @@ func ScrimGet(data model.ScrimGetReq) (*model.ScrimQueryResp, error) {
 	var rows *sql.Rows
 	var err error
 	if data.ScrimMap != nil {
-		rows, err = database.Db.Query("SELECT scrim.scrim_id, scrim.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time, scrim_status FROM scrim INNER JOIN team ON scrim.team_id = team.team_id WHERE scrim.scrim_status = $1 and scrim.scrim_map = $2;", "unmatched", data.ScrimMap)
+		rows, err = database.Db.Query("SELECT scrim.scrim_id, scrim.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time, scrim_status FROM scrim INNER JOIN team ON scrim.team_id = team.team_id WHERE scrim.scrim_status = $1 and scrim.scrim_map = $2 AND scrim.game_id = (SELECT game_id FROM team WHERE team_id = $3);", "unmatched", data.ScrimMap, data.TeamId)
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		rows, err = database.Db.Query("SELECT scrim.scrim_id, scrim.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time, scrim_status FROM scrim INNER JOIN team ON scrim.team_id = team.team_id WHERE scrim.scrim_status = $1;", "unmatched")
+		rows, err = database.Db.Query("SELECT scrim.scrim_id, scrim.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time, scrim_status FROM scrim INNER JOIN team ON scrim.team_id = team.team_id WHERE scrim.scrim_status = $1 AND scrim.game_id = (SELECT game_id FROM team WHERE team_id = $2);", "unmatched", data.TeamId)
 		if err != nil {
 			return nil, err
 		}
