@@ -34,3 +34,9 @@ type ChangeRole struct { // by Manager
 type KickMember struct {
 	UserId string `json:"user_id" binding:"required"`
 }
+
+type UserUpdateData struct {
+	Email       string `json:"email" binding:"required"`
+	PhoneNumber string `json:"phone_number" binding:"required"`
+	UserPass    string `json:"user_pass" binding:"required"`
+}

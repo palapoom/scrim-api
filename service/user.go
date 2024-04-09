@@ -81,3 +81,12 @@ func KickMember(data model.KickMember) error {
 
 	return nil
 }
+
+func UpdateUserProfile(user_id string, data model.UserUpdateData) error {
+	_, err := database.Db.Exec("UPDATE \"user\" SET email = $1, phone_number = $2, user_pass = $3 WHERE user_id = $4;", data.Email, data.PhoneNumber, data.UserPass)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -97,9 +97,36 @@ func HandlerKickMember(c *gin.Context) {
 		return
 	}
 
-	// c.Status(http.StatusOK)
 	c.JSON(http.StatusOK, gin.H{
 		"error_code": "0000",
 		"error_msg":  "successfully kick.",
+	})
+}
+
+func HandlerUpdateUserProfile(c *gin.Context, userId string) {
+	var data model.UserUpdateData
+
+	if err := c.ShouldBindJSON(&data); err != nil {
+		log.Print(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error_msg": err.Error(),
+		})
+		return
+	}
+
+	err := service.UpdateUserProfile(userId, data)
+
+	if err != nil {
+		log.Print(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error_code": "0001",
+			"error_msg":  "error updating user profile.",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"error_code": "0000",
+		"error_msg":  "successfully updated.",
 	})
 }

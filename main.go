@@ -63,6 +63,7 @@ func main() {
 	r.POST("/login", handler.HandlerLogin)
 	r.POST("/change-role", handler.HandlerChangeRole)
 	r.POST("/kick-member", handler.HandlerKickMember)
+	r.PUT("/update-profile/user-id/:user-id", func(ctx *gin.Context) { handler.HandlerUpdateUserProfile(ctx, ctx.Param("user-id")) })
 
 	team := r.Group("/team")
 	{
