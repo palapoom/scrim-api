@@ -127,7 +127,7 @@ func TeamMemberGet(teamId string) (*model.TeamMember, error) {
 
 func TeamDetailGet(teamId string) (*model.TeamDetail, error) {
 	var teamDetail model.TeamDetail
-	rows, err := database.Db.Query("SELECT user_id, nickname, role FROM \"user\" WHERE team_id = $1", teamId)
+	rows, err := database.Db.Query("SELECT user_id, nickname, role, phone_number FROM \"user\" WHERE team_id = $1", teamId)
 	if err != nil {
 		return nil, err
 	}
@@ -135,7 +135,7 @@ func TeamDetailGet(teamId string) (*model.TeamDetail, error) {
 
 	for rows.Next() {
 		var member model.Member
-		err := rows.Scan(&member.UserId, &member.Nickname, &member.Role)
+		err := rows.Scan(&member.UserId, &member.Nickname, &member.Role, &member.PhoneNumber)
 		if err != nil {
 			return nil, err
 		}
