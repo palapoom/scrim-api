@@ -31,6 +31,7 @@ type Member struct {
 	UserId   string `json:"user_id"`
 	Nickname string `json:"nickname"`
 	Role     string `json:"role"`
+	PhoneNumber string `json:"phone_number"`
 }
 
 type TeamDetail struct {
