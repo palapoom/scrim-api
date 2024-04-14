@@ -36,7 +36,7 @@ type KickMember struct {
 }
 
 type UserUpdateData struct {
-	Email       string `json:"email" binding:"required"`
-	PhoneNumber string `json:"phone_number" binding:"required"`
+	Nickname    *string  `json:"nickname"`
+	PhoneNumber *string `json:"phone_number"`
 	UserPass    *string `json:"user_pass"`
 }
