@@ -87,7 +87,7 @@ func ScrimGetOffer(teamId string) (*model.ScrimGet, error) {
 	var rows *sql.Rows
 	var err error
 
-	rows, err = database.Db.Query("SELECT scrim.scrim_id, scrim_offer.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time FROM scrim INNER JOIN scrim_offer ON scrim.scrim_id = scrim_offer.scrim_id INNER JOIN team ON scrim.team_id = team.team_id WHERE scrim.team_id = $1;", teamId)
+	rows, err = database.Db.Query("SELECT scrim.scrim_id, scrim_offer.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time FROM scrim INNER JOIN scrim_offer ON scrim.scrim_id = scrim_offer.scrim_id INNER JOIN team ON scrim.team_id = team.team_id WHERE scrim.team_id = $1 ORDER BY scrim.scrim_date ASC, scrim.scrim_time ASC;", teamId)
 	if err != nil {
 		return nil, err
 	}
@@ -114,12 +114,12 @@ func ScrimGet(data model.ScrimGetReq) (*model.ScrimQueryResp, error) {
 	var rows *sql.Rows
 	var err error
 	if data.ScrimMap != nil {
-		rows, err = database.Db.Query("SELECT scrim.scrim_id, scrim.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time, scrim_status FROM scrim INNER JOIN team ON scrim.team_id = team.team_id WHERE scrim.scrim_status = $1 and scrim.scrim_map = $2 AND scrim.game_id = (SELECT game_id FROM team WHERE team_id = $3);", "unmatched", data.ScrimMap, data.TeamId)
+		rows, err = database.Db.Query("SELECT scrim.scrim_id, scrim.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time, scrim_status FROM scrim INNER JOIN team ON scrim.team_id = team.team_id WHERE scrim.scrim_status = $1 and scrim.scrim_map = $2 AND scrim.game_id = (SELECT game_id FROM team WHERE team_id = $3) ORDER BY scrim.scrim_date ASC, scrim.scrim_time ASC;", "unmatched", data.ScrimMap, data.TeamId)
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		rows, err = database.Db.Query("SELECT scrim.scrim_id, scrim.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time, scrim_status FROM scrim INNER JOIN team ON scrim.team_id = team.team_id WHERE scrim.scrim_status = $1 AND scrim.game_id = (SELECT game_id FROM team WHERE team_id = $2);", "unmatched", data.TeamId)
+		rows, err = database.Db.Query("SELECT scrim.scrim_id, scrim.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time, scrim_status FROM scrim INNER JOIN team ON scrim.team_id = team.team_id WHERE scrim.scrim_status = $1 AND scrim.game_id = (SELECT game_id FROM team WHERE team_id = $2) ORDER BY scrim.scrim_date ASC, scrim.scrim_time ASC;", "unmatched", data.TeamId)
 		if err != nil {
 			return nil, err
 		}
@@ -185,7 +185,7 @@ func ScrimGet(data model.ScrimGetReq) (*model.ScrimQueryResp, error) {
 func ScrimGetMatch(teamId string) (*model.ScrimGet, error) {
 	var scrims model.ScrimGet
 
-	rows, err := database.Db.Query("SELECT scrim.scrim_id, scrim.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time, scrim_status FROM scrim INNER JOIN team ON scrim.team_id = team.team_id WHERE (scrim.team_id = $1 or scrim.offer_team_id = $2) and scrim.scrim_status = 'matched';", teamId, teamId)
+	rows, err := database.Db.Query("SELECT scrim.scrim_id, scrim.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time, scrim_status FROM scrim INNER JOIN team ON scrim.team_id = team.team_id WHERE (scrim.team_id = $1 or scrim.offer_team_id = $2) and scrim.scrim_status = 'matched' ORDER BY scrim.scrim_date ASC, scrim.scrim_time ASC;", teamId, teamId)
 	if err != nil {
 		return nil, err
 	}
