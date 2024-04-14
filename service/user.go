@@ -83,7 +83,23 @@ func KickMember(data model.KickMember) error {
 }
 
 func UpdateUserProfile(user_id string, data model.UserUpdateData) error {
-	_, err := database.Db.Exec("UPDATE \"user\" SET email = $1, phone_number = $2, user_pass = $3 WHERE user_id = $4;", data.Email, data.PhoneNumber, data.UserPass)
+	if data.UserPass != nil {
+		_, err := database.Db.Exec("UPDATE \"user\" SET user_pass = $1 WHERE user_id = $2;", data.UserPass, user_id)	
+	}
+	if err != nil {
+		return err
+	}
+	
+	if data.UserPass != nil {
+		_, err := database.Db.Exec("UPDATE \"user\" SET nickname = $1 WHERE user_id = $2;", data.Nickname, user_id)	
+	}
+	if err != nil {
+		return err
+	}
+
+	if data.UserPass != nil {
+		_, err := database.Db.Exec("UPDATE \"user\" SET phone_number = $1 WHERE user_id = $2;", data.PhoneNumber, user_id)	
+	}
 	if err != nil {
 		return err
 	}
