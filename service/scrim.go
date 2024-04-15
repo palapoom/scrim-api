@@ -108,6 +108,9 @@ func ScrimGetOffer(teamId string) (*model.ScrimGet, error) {
 		return nil, err
 	}
 
+	// Get the current time in GMT+7
+	currentGMT7 := time.Now().UTC().Add(time.Hour * 7)
+
 	defer rows.Close()
 	for rows.Next() {
 		var detail model.ScrimDetail
@@ -115,7 +118,20 @@ func ScrimGetOffer(teamId string) (*model.ScrimGet, error) {
 		if err != nil {
 			return nil, err
 		}
-		scrims.Scrims = append(scrims.Scrims, detail)
+		scrimDate := strings.Split(detail.ScrimDate, "T")
+		scrimTime := strings.Split(detail.ScrimTime, "T")
+		dateTimeStr := scrimDate[0] + "T" + scrimTime[1]
+
+		// Parse the given date and time strings
+		dateTime, err := time.Parse(time.RFC3339, dateTimeStr)
+		if err != nil {
+			fmt.Println("Error parsing date:", err)
+			return nil, err
+		}
+
+		if dateTime.After(currentGMT7) || dateTime.Equal(currentGMT7) {
+			scrims.Scrims = append(scrims.Scrims, detail)
+		}
 	}
 	err = rows.Err()
 	if err != nil {
@@ -223,6 +239,9 @@ func ScrimGetMatch(teamId string) (*model.ScrimGet, error) {
 		return nil, err
 	}
 
+	// Get the current time in GMT+7
+	currentGMT7 := time.Now().UTC().Add(time.Hour * 7)
+
 	defer rows.Close()
 	for rows.Next() {
 		var detail model.ScrimDetail
@@ -236,7 +255,22 @@ func ScrimGetMatch(teamId string) (*model.ScrimGet, error) {
 			return nil, err
 		}
 		if detail.TeamId != teamId {
-			scrims.Scrims = append(scrims.Scrims, detail)
+
+			scrimDate := strings.Split(detail.ScrimDate, "T")
+			scrimTime := strings.Split(detail.ScrimTime, "T")
+			dateTimeStr := scrimDate[0] + "T" + scrimTime[1]
+
+			// Parse the given date and time strings
+			dateTime, err := time.Parse(time.RFC3339, dateTimeStr)
+			if err != nil {
+				fmt.Println("Error parsing date:", err)
+				return nil, err
+			}
+
+			if dateTime.After(currentGMT7) || dateTime.Equal(currentGMT7) {
+
+				scrims.Scrims = append(scrims.Scrims, detail)
+			}
 		}
 	}
 	err = rows.Err()
@@ -245,5 +279,4 @@ func ScrimGetMatch(teamId string) (*model.ScrimGet, error) {
 	}
 
 	return &scrims, nil
-
 }
