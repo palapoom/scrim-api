@@ -128,16 +128,19 @@ func ScrimGet(data model.ScrimGetReq) (*model.ScrimQueryResp, error) {
 	var rows *sql.Rows
 	var err error
 	if data.ScrimMap != nil {
-		rows, err = database.Db.Query("SELECT scrim.scrim_id, scrim.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time, scrim_status FROM scrim INNER JOIN team ON scrim.team_id = team.team_id WHERE scrim.scrim_status = $1 and scrim.scrim_map = $2 AND scrim.game_id = (SELECT game_id FROM team WHERE team_id = $3) AND (scrim.scrim_date > CURRENT_DATE OR (scrim.scrim_date = CURRENT_DATE  AND scrim.scrim_time > CURRENT_TIME )) ORDER BY scrim.scrim_date ASC, scrim.scrim_time ASC;", "unmatched", data.ScrimMap, data.TeamId)
+		rows, err = database.Db.Query("SELECT scrim.scrim_id, scrim.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time, scrim_status FROM scrim INNER JOIN team ON scrim.team_id = team.team_id WHERE scrim.scrim_status = $1 and scrim.scrim_map = $2 AND scrim.game_id = (SELECT game_id FROM team WHERE team_id = $3) AND (scrim.scrim_date > CURRENT_DATE AT TIME ZONE 'GMT+7'  OR (scrim.scrim_date = CURRENT_DATE AT TIME ZONE 'GMT+7'   AND scrim.scrim_time > CURRENT_TIME AT TIME ZONE 'GMT+7'  )) ORDER BY scrim.scrim_date ASC, scrim.scrim_time ASC;", "unmatched", data.ScrimMap, data.TeamId)
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		rows, err = database.Db.Query("SELECT scrim.scrim_id, scrim.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time, scrim_status FROM scrim INNER JOIN team ON scrim.team_id = team.team_id WHERE scrim.scrim_status = $1 AND scrim.game_id = (SELECT game_id FROM team WHERE team_id = $2) AND (scrim.scrim_date > CURRENT_DATE OR (scrim.scrim_date = CURRENT_DATE  AND scrim.scrim_time > CURRENT_TIME )) ORDER BY scrim.scrim_date ASC, scrim.scrim_time ASC;", "unmatched", data.TeamId)
+		rows, err = database.Db.Query("SELECT scrim.scrim_id, scrim.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time, scrim_status FROM scrim INNER JOIN team ON scrim.team_id = team.team_id WHERE scrim.scrim_status = $1 AND scrim.game_id = (SELECT game_id FROM team WHERE team_id = $2) AND (scrim.scrim_date > CURRENT_DATE AT TIME ZONE 'GMT+7' OR (scrim.scrim_date = CURRENT_DATE  AT TIME ZONE 'GMT+7' AND scrim.scrim_time > CURRENT_TIME AT TIME ZONE 'GMT+7')) ORDER BY scrim.scrim_date ASC, scrim.scrim_time ASC;", "unmatched", data.TeamId)
 		if err != nil {
 			return nil, err
 		}
 	}
+
+	// Get the current time in GMT+7
+	currentGMT7 := time.Now().UTC().Add(time.Hour * 7)
 
 	defer rows.Close()
 	for rows.Next() {
@@ -146,7 +149,21 @@ func ScrimGet(data model.ScrimGetReq) (*model.ScrimQueryResp, error) {
 		if err != nil {
 			return nil, err
 		}
-		scrims.Scrims = append(scrims.Scrims, detail)
+
+		scrimDate := strings.Split(detail.ScrimDate, "T")
+		scrimTime := strings.Split(detail.ScrimTime, "T")
+		dateTimeStr := scrimDate[0] + "T" + scrimTime[1]
+
+		// Parse the given date and time strings
+		dateTime, err := time.Parse(time.RFC3339, dateTimeStr)
+		if err != nil {
+			fmt.Println("Error parsing date:", err)
+			return nil, err
+		}
+
+		if dateTime.After(currentGMT7) || dateTime.Equal(currentGMT7) {
+			scrims.Scrims = append(scrims.Scrims, detail)
+		}
 	}
 	err = rows.Err()
 	if err != nil {
