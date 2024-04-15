@@ -92,6 +92,11 @@ func TeamJoin(data model.TeamJoin) (*model.TeamDetail, error) {
 		return nil, err
 	}
 
+	_, err = database.Db.Exec("UPDATE \"user\" SET game_id = (SELECT game_id FROM team WHERE team_id = $1) WHERE user_id = $2", teamID, data.UserId)
+	if err != nil {
+		return nil, err
+	}
+
 	teamDetail, err := TeamDetailGet(strconv.Itoa(teamID))
 	if err != nil {
 		return nil, err
