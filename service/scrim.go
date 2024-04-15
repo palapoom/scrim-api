@@ -216,7 +216,7 @@ func ScrimGetMatch(teamId string) (*model.ScrimGet, error) {
 		if err != nil {
 			return nil, err
 		}
-		if detail.TeamId == teamId {
+		if detail.TeamId != teamId {
 			scrims.Scrims = append(scrims.Scrims, detail)
 		}
 	}
