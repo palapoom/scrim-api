@@ -25,7 +25,7 @@ func ScrimPost(data model.ScrimPost) (*int, error) {
 
 	fmt.Printf("last scrim_id: %v", lastScrimId)
 
-	if detail.ScrimId != lastScrimId+1 {
+	if detail.ScrimId == 0 {
 		_, err = database.Db.Exec("INSERT INTO \"scrim\" (scrim_id, scrim_date, scrim_time, scrim_map, game_id, team_id) VALUES ($1, $2, $3, $4, $5, $6)",
 			lastScrimId+1, data.ScrimDate, data.ScrimTime, data.ScrimMap, data.GameId, data.TeamId)
 		if err != nil {
