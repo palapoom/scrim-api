@@ -87,7 +87,7 @@ func ScrimGetOffer(teamId string) (*model.ScrimGet, error) {
 	var rows *sql.Rows
 	var err error
 
-	rows, err = database.Db.Query("SELECT scrim.scrim_id, scrim_offer.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time FROM scrim INNER JOIN scrim_offer ON scrim.scrim_id = scrim_offer.scrim_id INNER JOIN team ON scrim.team_id = team.team_id WHERE scrim.team_id = $1 ORDER BY scrim.scrim_date ASC, scrim.scrim_time ASC;", teamId)
+	rows, err = database.Db.Query("SELECT scrim.scrim_id, scrim_offer.team_id, t.team_logo, t.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time FROM scrim INNER JOIN scrim_offer ON scrim.scrim_id = scrim_offer.scrim_id INNER JOIN team AS t ON scrim_offer.team_id = t.team_id WHERE scrim.team_id = $1 ORDER BY scrim.scrim_date ASC, scrim.scrim_time ASC;", teamId)
 	if err != nil {
 		return nil, err
 	}
