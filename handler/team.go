@@ -115,3 +115,20 @@ func HandlerTeamInviteCodeGet(c *gin.Context, teamId string) {
 
 	c.JSON(http.StatusOK, resp)
 }
+
+func HandlerTeamDelete(c *gin.Context, teamId string) {
+	err := service.TeamDelete(teamId)
+
+	if err != nil {
+		log.Print(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusNoContent, gin.H{
+		"error_code": "0000",
+		"error_msg":  "successfully delete team",
+	})
+}
