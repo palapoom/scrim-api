@@ -73,6 +73,7 @@ func main() {
 		team.GET("/detail/team-id/:team-id", func(ctx *gin.Context) { handler.HandlerTeamDetailGet(ctx, ctx.Param("team-id")) })
 		team.PUT("/invite-code/team-id/:team-id", func(ctx *gin.Context) { handler.HandlerTeamInviteCodeGet(ctx, ctx.Param("team-id")) })
 		team.PUT("", handler.HandlerTeamUpdate)
+		team.DELETE("/team-id/:team-id", func(ctx *gin.Context) { handler.HandlerTeamDelete(ctx, ctx.Param("team-id")) })
 	}
 
 	scrim := r.Group("/scrim")
