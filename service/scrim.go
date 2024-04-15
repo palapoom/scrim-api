@@ -6,6 +6,8 @@ import (
 	"scrim-api/database"
 	"scrim-api/model"
 	"strconv"
+	"strings"
+	"time"
 )
 
 func ScrimPost(data model.ScrimPost) (*int, error) {
