@@ -12,7 +12,7 @@ func ScrimPost(data model.ScrimPost) (*int, error) {
 	// update an existing scrim
 	var detail model.ScrimDetail
 	err := database.Db.QueryRow("SELECT scrim_id FROM scrim WHERE scrim_date = $1 and scrim_time = $2 and team_id = $3", data.ScrimDate, data.ScrimTime, data.TeamId).Scan(&detail.ScrimId)
-	if err != nil {
+	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
 
