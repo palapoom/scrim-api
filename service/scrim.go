@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"scrim-api/database"
 	"scrim-api/model"
+	"strconv"
 )
 
 func ScrimPost(data model.ScrimPost) (*int, error) {
@@ -185,7 +186,7 @@ func ScrimGet(data model.ScrimGetReq) (*model.ScrimQueryResp, error) {
 func ScrimGetMatch(teamId string) (*model.ScrimGet, error) {
 	var scrims model.ScrimGet
 
-	rows, err := database.Db.Query("SELECT scrim.scrim_id, scrim.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time, scrim_status FROM scrim INNER JOIN team ON scrim.team_id = team.team_id WHERE (scrim.team_id = $1 or scrim.offer_team_id = $2) and scrim.scrim_status = 'matched' ORDER BY scrim.scrim_date ASC, scrim.scrim_time ASC;", teamId, teamId)
+	rows, err := database.Db.Query("SELECT scrim.scrim_id, team.team_id, team.team_logo, team.team_name, scrim.scrim_map, scrim.scrim_date, scrim.scrim_time, scrim_status FROM scrim INNER JOIN team ON (scrim.team_id = team.team_id OR scrim.offer_team_id = team.team_id)  WHERE (scrim.team_id = $1 or scrim.offer_team_id = $2) and scrim.scrim_status = 'matched' ORDER BY scrim.scrim_date ASC, scrim.scrim_time ASC;", teamId, teamId)
 	if err != nil {
 		return nil, err
 	}
@@ -197,7 +198,14 @@ func ScrimGetMatch(teamId string) (*model.ScrimGet, error) {
 		if err != nil {
 			return nil, err
 		}
-		scrims.Scrims = append(scrims.Scrims, detail)
+
+		teamId, err := strconv.Atoi(teamId)
+		if err != nil {
+			return nil, err
+		}
+		if detail.TeamId == teamId {
+			scrims.Scrims = append(scrims.Scrims, detail)
+		}
 	}
 	err = rows.Err()
 	if err != nil {
