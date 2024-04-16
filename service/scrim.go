@@ -280,18 +280,3 @@ func ScrimGetMatch(teamId string) (*model.ScrimGet, error) {
 
 	return &scrims, nil
 }
-
-// delete team and set team_id for all user in team to null
-func TeamDelete(teamId string) error {
-	_, err := database.Db.Exec("UPDATE \"user\" SET team_id = NULL WHERE team_id = $1", teamId)
-	if err != nil {
-		return err
-	}
-
-	_, err = database.Db.Exec("DELETE FROM \"team\" WHERE team_id = $1", teamId)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
