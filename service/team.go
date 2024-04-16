@@ -178,3 +178,19 @@ func TeamSetFlagInviteCode(teamId string) (*model.TeamInviteCodeGet, error) {
 		InviteCode: inviteCode,
 	}, nil
 }
+
+
+// delete team and set team_id for all user in team to null
+func TeamDelete(teamId string) error {
+	_, err := database.Db.Exec("UPDATE \"user\" SET team_id = NULL, role = $1 WHERE team_id = $2", "Player", teamId)
+	if err != nil {
+		return err
+	}
+
+	_, err = database.Db.Exec("DELETE FROM \"team\" WHERE team_id = $1", teamId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
