@@ -130,3 +130,31 @@ func HandlerUpdateUserProfile(c *gin.Context, userId string) {
 		"error_msg":  "successfully updated.",
 	})
 }
+
+func HandlerForgotPassword(c *gin.Context) {
+	var data model.ForgotPasswordReq
+
+	if err := c.ShouldBindJSON(&data); err != nil {
+		log.Print(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error_msg": err.Error(),
+		})
+		return
+	}
+
+	err := service.SendPasswordToEmail(data)
+
+	if err != nil {
+		log.Print(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error_code": "0001",
+			"error_msg":  "error sending password to email.",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"error_code": "0000",
+		"error_msg":  "successfully sent password to email.",
+	})
+}
