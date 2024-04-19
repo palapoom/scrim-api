@@ -148,7 +148,7 @@ func HandlerForgotPassword(c *gin.Context) {
 		log.Print(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error_code": "0001",
-			"error_msg":  "error sending password to email.",
+			"error_msg":  "error sending email or email does not exist in the system.",
 		})
 		return
 	}
