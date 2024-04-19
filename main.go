@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	email_service "scrim-api/email"
 	"scrim-api/database"
 	"scrim-api/handler"
 
@@ -45,6 +46,15 @@ func main() {
 
 	database.SetDB(db)
 
+	// auth email
+	from := "wescrim@hotmail.com"
+	password := "Palapoom15!"
+	smtpHost := "smtp.office365.com"
+	smtpPort := "587"
+	es := email_service.NewEmailService(smtpHost, smtpPort, from, password)
+	email_service.SetES(es)
+	email_service.SetAuth(from, password)
+
 	docs.SwaggerInfo.Title = "Scrim API"
 	docs.SwaggerInfo.Version = "1.0"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
@@ -64,7 +74,8 @@ func main() {
 	r.POST("/change-role", handler.HandlerChangeRole)
 	r.POST("/kick-member", handler.HandlerKickMember)
 	r.PUT("/update-profile/user-id/:user-id", func(ctx *gin.Context) { handler.HandlerUpdateUserProfile(ctx, ctx.Param("user-id")) })
-
+	r.POST("/forgot-password", handler.HandlerForgotPassword)
+	
 	team := r.Group("/team")
 	{
 		team.POST("/create/user-id/:user-id", func(ctx *gin.Context) { handler.HandlerTeamCreate(ctx, ctx.Param("user-id")) })
