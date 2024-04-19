@@ -1,7 +1,9 @@
 package service
 
 import (
+	"log"
 	"scrim-api/database"
+	email_service "scrim-api/email"
 	"scrim-api/model"
 )
 
@@ -104,6 +106,32 @@ func UpdateUserProfile(user_id string, data model.UserUpdateData) error {
 	if err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func SendPasswordToEmail(data model.ForgotPasswordReq) error {
+	var userpass string
+	err := database.Db.QueryRow(`
+    SELECT 
+		user_pass
+    FROM 
+        "user"
+    WHERE 
+        email = $1`,
+		data.Email).Scan(
+		&userpass,
+	)
+	if err != nil {
+		return err
+	}
+
+	// send email
+	if err := email_service.ES.SendPasswordtoEmail(data.Email, userpass); err != nil {
+		log.Println("Error sending email:", err)
+		return err
+	}
+	log.Println("Successfully sent email")
 
 	return nil
 }
