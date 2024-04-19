@@ -40,3 +40,8 @@ type UserUpdateData struct {
 	PhoneNumber *string `json:"phone_number"`
 	UserPass    *string `json:"user_pass"`
 }
+
+type ForgotPasswordReq struct {
+	Email string `json:"email" binding:"required"`
+}
+
