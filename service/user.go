@@ -3,7 +3,7 @@ package service
 import (
 	"log"
 	"scrim-api/database"
-	email_service "scrim-api/email"
+	send_email "scrim-api/email_test"
 	"scrim-api/model"
 )
 
@@ -127,7 +127,11 @@ func SendPasswordToEmail(data model.ForgotPasswordReq) error {
 	}
 
 	// send email
-	if err := email_service.ES.SendPasswordtoEmail(data.Email, userpass); err != nil {
+	// if err := email_service.ES.SendPasswordtoEmail(data.Email, userpass); err != nil {
+	// 	log.Println("Error sending email:", err)
+	// 	return err
+	// }
+	if err := send_email.SendEmail(data.Email, userpass); err != nil {
 		log.Println("Error sending email:", err)
 		return err
 	}
