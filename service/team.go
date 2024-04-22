@@ -9,6 +9,11 @@ import (
 	"time"
 )
 
+const (
+	InviteCodeExpireError = "invite code is expired"
+	InviteCodeNotValid    = "invite code is not valid"
+)
+
 func TeamCreate(userId string, data model.TeamCreateReq) (*model.TeamCreateResp, error) {
 	var lastTeamId int
 	err := database.Db.QueryRow("SELECT team_id FROM \"team\" ORDER BY team_id DESC LIMIT 1").Scan(&lastTeamId)
