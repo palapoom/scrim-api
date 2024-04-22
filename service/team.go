@@ -1,10 +1,12 @@
 package service
 
 import (
+	"database/sql"
 	"fmt"
 	"scrim-api/database"
 	"scrim-api/model"
 	"strconv"
+	"time"
 )
 
 func TeamCreate(userId string, data model.TeamCreateReq) (*model.TeamCreateResp, error) {
@@ -80,10 +82,25 @@ func TeamUpdate(data model.TeamUpdate) error {
 
 func TeamJoin(data model.TeamJoin) (*model.TeamDetail, error) {
 	var teamID int
-	err := database.Db.QueryRow("SELECT team_id FROM team WHERE invite_code = $1", data.InviteCode).Scan(&teamID)
+	var inviteExpire sql.NullTime
+	err := database.Db.QueryRow("SELECT team_id, invite_expire FROM team WHERE invite_code = $1", data.InviteCode).Scan(&teamID, &inviteExpire)
 	if err != nil {
 		fmt.Println("Error querying team table:", err)
 		return nil, err
+	}
+
+	// check if invite code is not expired
+	if inviteExpire == (sql.NullTime{}) {
+		return nil, fmt.Errorf(InviteCodeNotValid)
+	}
+	now := time.Now()
+	if now.After(inviteExpire.Time) {
+		_, err = database.Db.Exec("UPDATE \"team\" SET invite_flag = $1 WHERE team_id = $2", false, teamID)
+		fmt.Println("Error updating team table:", err)
+		if err != nil {
+			return nil, err
+		}
+		return nil, fmt.Errorf(InviteCodeExpireError)
 	}
 
 	_, err = database.Db.Exec("UPDATE \"user\" SET team_id = $1 WHERE user_id = $2", teamID, data.UserId)
