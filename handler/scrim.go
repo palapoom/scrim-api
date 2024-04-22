@@ -188,3 +188,17 @@ func HandlerScrimGetMatch(c *gin.Context, teamId string) {
 
 	c.JSON(http.StatusOK, resp)
 }
+
+func HandlerScrimGetMatchHistory(c *gin.Context, teamId string) {
+	resp, err := service.ScrimGetMatchHistory(teamId)
+
+	if err != nil {
+		log.Print(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
+}
