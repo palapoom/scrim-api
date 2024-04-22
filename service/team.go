@@ -169,6 +169,25 @@ func TeamDetailGet(teamId string) (*model.TeamDetail, error) {
 		return nil, err
 	}
 
+	var inviteExpire sql.NullTime
+	err = database.Db.QueryRow("SELECT invite_expire FROM team WHERE team_id = $1", teamId).Scan(&inviteExpire)
+	if err != nil {
+		fmt.Println("Error querying team table:", err)
+		return nil, err
+	}
+
+	// check if invite code is not expired
+	if inviteExpire != (sql.NullTime{}) {
+		now := time.Now()
+		if now.After(inviteExpire.Time) {
+			_, err = database.Db.Exec("UPDATE \"team\" SET invite_flag = $1 WHERE team_id = $2", false, teamId)
+			fmt.Println("Error updating team table:", err)
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+
 	err = database.Db.QueryRow("SELECT team_name, game_id, team_logo, invite_code, invite_flag FROM team WHERE team_id = $1", teamId).Scan(&teamDetail.TeamName, &teamDetail.GameId, &teamDetail.TeamLogo, &teamDetail.InviteCode, &teamDetail.InviteFlag)
 	if err != nil {
 		return nil, err
