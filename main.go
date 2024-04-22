@@ -97,6 +97,7 @@ func main() {
 		scrim.GET("/offer/team-id/:team-id", func(ctx *gin.Context) { handler.HandlerScrimGetOffer(ctx, ctx.Param("team-id")) })
 		scrim.GET("", handler.HandlerScrimQuery)
 		scrim.GET("/match/team-id/:team-id", func(ctx *gin.Context) { handler.HandlerScrimGetMatch(ctx, ctx.Param("team-id")) })
+		scrim.GET("/match-history/team-id/:team-id", func(ctx *gin.Context) { handler.HandlerScrimGetMatchHistory(ctx, ctx.Param("team-id")) })
 	}
 
 	game := r.Group("/game")
