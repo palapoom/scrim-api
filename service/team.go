@@ -228,6 +228,16 @@ func TeamDelete(teamId string) error {
 		return err
 	}
 
+	_, err = database.Db.Exec("DELETE FROM \"scrim_offer\" WHERE team_id = $1", teamId)
+	if err != nil {
+		return err
+	}
+
+	_, err = database.Db.Exec("DELETE FROM \"scrim\" WHERE team_id = $1 OR offer_team_id = $1", teamId)
+	if err != nil {
+		return err
+	}
+
 	_, err = database.Db.Exec("DELETE FROM \"team\" WHERE team_id = $1", teamId)
 	if err != nil {
 		return err
